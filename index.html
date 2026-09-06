@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
+        /* ===== ОСНОВНЫЕ СТИЛИ (как были) ===== */
         :root {
             --bg-dark: #0b132b;
             --bg-card: #16213e;
@@ -146,12 +147,15 @@
             justify-content: space-between;
             align-items: center;
             background: linear-gradient(to right, var(--bg-dark), #203d61);
+            gap: 10px;
         }
 
         .header-left {
             display: flex;
             align-items: center;
             gap: 10px;
+            flex: 1 1 auto;
+            min-width: 0;
         }
 
         .header-logo {
@@ -179,16 +183,228 @@
             font-size: 14px;
         }
 
-        #sidebar h2 .toggle-indicator {
+        .header-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ===== БЛОК КОМАНДЫ (кликабельный) ===== */
+        .header-right {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            cursor: pointer;
+            position: relative;
+            padding: 4px 6px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .header-right:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .header-right .team-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            line-height: 1.2;
+        }
+
+        .header-right .team-sub {
+            font-size: 9px;
+            opacity: 0.5;
+            color: var(--text-muted);
+            font-weight: 400;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+            transition: opacity 0.2s;
+        }
+
+        .header-right:hover .team-sub {
+            opacity: 0.8;
+        }
+
+        .header-right .team-name-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-right .team-logo {
+            width: 22px;
+            height: 22px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-right .team-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .header-right .team-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 0.3px;
+        }
+
+        .header-right .it-highlight {
+            color: #a8f5f7;
+        }
+
+        /* ===== ТУЛТИП ДЛЯ КОМАНДЫ ===== */
+        .team-tooltip {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            color: var(--text-main);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.6rem;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            z-index: 5;
+        }
+
+        .team-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid transparent;
+            border-top-color: var(--bg-card);
+        }
+
+        .header-right:hover .team-tooltip {
+            opacity: 1;
+        }
+
+        /* ===== МОДАЛЬНОЕ ОКНО КОМАНДЫ ===== */
+        .modal-team {
+            position: fixed;
+            background: var(--bg-card);
+            color: var(--text-main);
+            border-radius: 12px;
+            padding: 10px 12px 12px;
+            width: 160px;
+            max-width: 92vw;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7), var(--glow);
+            border: 1px solid rgba(255,255,255,0.05);
+            z-index: 2000;
+            display: none;
+            animation: popIn 0.2s ease;
+        }
+
+        .modal-team h2 {
+            margin: 0 0 6px 0;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-main);
+            text-align: center;
+            border-bottom: 1.5px solid var(--accent);
+            padding-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .modal-team .team-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 8px 0;
+        }
+
+        .modal-team .team-list li {
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 0.6rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .modal-team .team-list li:last-child {
+            border-bottom: none;
+        }
+
+        .modal-team .team-list .name {
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 0.6rem;
+        }
+
+        .modal-team .team-list .role {
+            background: rgba(0, 85, 164, 0.2);
+            color: var(--accent);
+            padding: 1px 5px;
+            border-radius: 12px;
+            font-size: 0.5rem;
+            font-weight: 700;
+            white-space: nowrap;
+            border: 1px solid rgba(0, 85, 164, 0.12);
+            flex-shrink: 0;
+            letter-spacing: 0.2px;
+        }
+
+        .modal-team .close-btn {
+            display: block;
+            margin: 0 auto;
+            padding: 3px 14px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+
+        .modal-team .close-btn:hover {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(4px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .toggle-indicator {
             display: none;
             width: 14px;
             height: 5px;
             position: relative;
             cursor: pointer;
             user-select: none;
+            flex-shrink: 0;
         }
 
-        #sidebar h2 .toggle-indicator::after {
+        .toggle-indicator::after {
             content: '';
             position: absolute;
             top: 0;
@@ -244,7 +460,6 @@
             z-index: 1;
         }
 
-        /* Фоны для информационной панели — имена классов совпадают с id (с подчёркиваниями) */
         .info-panel-igu::before { background-image: url('https://i.ibb.co/Xx1b1cMy/image.png'); }
         .info-panel-bgu::before { background-image: url('https://i.ibb.co/CpbGvvFD/image.png'); }
         .info-panel-irnitu::before { background-image: url('https://i.ibb.co/60BMtY3M/image.png'); }
@@ -464,7 +679,6 @@
             z-index: 1;
         }
 
-        /* Фоны для списка — имена классов совпадают с id */
         .uni-bg-igu::before { background-image: url('https://i.ibb.co/Xx1b1cMy/image.png'); }
         .uni-bg-bgu::before { background-image: url('https://i.ibb.co/CpbGvvFD/image.png'); }
         .uni-bg-irnitu::before { background-image: url('https://i.ibb.co/60BMtY3M/image.png'); }
@@ -981,17 +1195,40 @@
 
             #sidebar h2 {
                 font-size: 18px;
-                padding: 12px 14px 10px;
+                padding: 12px 10px 10px;
                 cursor: pointer;
                 user-select: none;
+                gap: 6px;
             }
 
             #sidebar h2 .toggle-indicator {
                 display: inline-block;
+                margin-left: auto;
             }
 
             #sidebar.collapsed h2 .toggle-indicator::after {
                 transform: rotate(180deg);
+            }
+
+            .header-right .team-sub {
+                font-size: 7px;
+            }
+            .header-right .team-name {
+                font-size: 12px;
+            }
+            .header-right .team-logo {
+                width: 18px;
+                height: 18px;
+            }
+            .header-right .team-name-row {
+                gap: 4px;
+            }
+            .header-left .header-logo {
+                width: 22px;
+                height: 22px;
+            }
+            .header-title {
+                font-size: 16px;
             }
 
             #uni-info-panel {
@@ -1054,8 +1291,27 @@
             }
 
             #sidebar h2 {
-                font-size: 16px;
-                padding: 10px 12px 8px;
+                font-size: 15px;
+                padding: 8px 8px 8px;
+                gap: 4px;
+            }
+
+            .header-right .team-sub {
+                font-size: 6px;
+            }
+            .header-right .team-name {
+                font-size: 10px;
+            }
+            .header-right .team-logo {
+                width: 14px;
+                height: 14px;
+            }
+            .header-left .header-logo {
+                width: 18px;
+                height: 18px;
+            }
+            .header-title {
+                font-size: 14px;
             }
 
             #uni-info-panel {
@@ -1153,8 +1409,24 @@
                     <img src="https://i.ibb.co/qM93nPSM/image.png" alt="Логотип" onerror="this.style.display='none';this.parentElement.querySelector('.fallback-text').style.display='flex';">
                     <span class="fallback-text" style="display:none;">Ю</span>
                 </span>
-                ЮНИВЕР
+                <span class="header-title">ЮНИВЕР</span>
             </span>
+
+            <!-- ===== БЛОК КОМАНДЫ (кликабельный) ===== -->
+            <span class="header-right" id="teamTrigger">
+                <span class="team-text">
+                    <span class="team-sub">Сайт сделан командой</span>
+                    <span class="team-name-row">
+                        <span class="team-logo">
+                            <img src="https://i.ibb.co/tTDY02ZQ/image.png" alt="Команда" onerror="this.style.display='none';">
+                        </span>
+                        <span class="team-name">sol<span class="it-highlight">IT</span>ud</span>
+                    </span>
+                </span>
+                <!-- Тултип -->
+                <span class="team-tooltip">Нажмите чтоб посмотреть</span>
+            </span>
+
             <span class="toggle-indicator"></span>
         </h2>
 
@@ -1179,9 +1451,21 @@
         </div>
     </div>
 
+    <!-- ===== МОДАЛЬНОЕ ОКНО КОМАНДЫ ===== -->
+    <div class="modal-team" id="modalTeam">
+        <h2>Наша команда</h2>
+        <ul class="team-list">
+            <li><span class="name">Третьяк Никита</span><span class="role">дизайнер/программист</span></li>
+            <li><span class="name">Косилов Денис</span><span class="role">дизайнер</span></li>
+            <li><span class="name">Шестак Полина</span><span class="role">программист</span></li>
+            <li><span class="name">Почтаренко Дмитрий</span><span class="role">дизайнер</span></li>
+        </ul>
+        <button class="close-btn" id="closeModalBtn">Закрыть</button>
+    </div>
+
     <script>
         (function() {
-            // ---------- ДАННЫЕ О ВУЗАХ ----------
+            // ---------- ДАННЫЕ О ВУЗАХ (без изменений) ----------
             const universities = [{
                 id: 'igu',
                 name: 'Иркутский государственный университет (ИГУ)',
@@ -1498,7 +1782,7 @@
             document.getElementById('zoom-in').addEventListener('click', function() { map.zoomIn(); });
             document.getElementById('zoom-out').addEventListener('click', function() { map.zoomOut(); });
 
-            // ---------- ПАНЕЛЬ ----------
+            // ---------- ПАНЕЛЬ (мобильная) ----------
             const sidebar = document.getElementById('sidebar');
             const toggleIndicator = document.querySelector('.toggle-indicator');
             let isPanelCollapsed = false;
@@ -1531,7 +1815,11 @@
             const sidebarTitle = document.querySelector('#sidebar h2');
             if (sidebarTitle) {
                 sidebarTitle.addEventListener('click', function(e) {
-                    if (window.innerWidth <= 768) togglePanel();
+                    if (window.innerWidth <= 768) {
+                        if (!e.target.closest('.toggle-indicator')) {
+                            togglePanel();
+                        }
+                    }
                 });
             }
 
@@ -1551,7 +1839,7 @@
                 }
             });
 
-            // ---------- ПАЛИТРА ----------
+            // ---------- ПАЛИТРА КАРТЫ ----------
             const initialStops = [
                 { pos: 0.000, color: '#a3b9e6' },
                 { pos: 0.780, color: '#a3b9e6' },
@@ -1633,7 +1921,7 @@
                 if (openPopup) setTimeout(() => { openPopup(); }, 350);
             }
 
-            // ---------- МАРКЕРЫ ----------
+            // ---------- МАРКЕРЫ (вузы) ----------
             function createCustomIcon(uni, dark, main, light) {
                 const isBranch = uni.type === 'branch';
                 const branchClass = isBranch ? ' branch' : '';
@@ -1857,17 +2145,20 @@
                 }, 200);
             }
 
-            function selectUniversity(uniId) {
+            function selectUniversity(uniId, options = {}) {
+                const { focus = true } = options;
                 selectedUniId = uniId;
                 updateInfoPanel(uniId);
-                const marker = markers[uniId];
-                if (marker) {
-                    const uni = universities.find(u => u.id === uniId);
-                    setTimeout(() => {
-                        focusMap(uni.lat, uni.lng, 16, function() {
-                            marker.openPopup();
-                        });
-                    }, 150);
+                if (focus) {
+                    const marker = markers[uniId];
+                    if (marker) {
+                        const uni = universities.find(u => u.id === uniId);
+                        setTimeout(() => {
+                            focusMap(uni.lat, uni.lng, 16, function() {
+                                marker.openPopup();
+                            });
+                        }, 150);
+                    }
                 }
             }
 
@@ -1917,7 +2208,7 @@
             }
 
             function focusCampus(campus) {
-                selectUniversity('igu');
+                selectUniversity('igu', { focus: false });
                 const key = campus.lat.toFixed(6) + ',' + campus.lng.toFixed(6);
                 const marker = campusMarkersMap[key];
                 if (marker) {
@@ -2035,7 +2326,7 @@
                 filterUniversities(this.value);
             });
 
-            // ---------- ЗАПУСК ----------
+            // ---------- ЗАПУСК КАРТЫ ----------
             const colors = applyInitialGradient();
             initMarkers(colors.dark, colors.main, colors.light);
             updateMarkerColors(colors.dark, colors.main, colors.light);
@@ -2045,21 +2336,39 @@
                     const icon = createCustomIcon(uni, dark, main, light);
                     if (markers[uni.id]) markers[uni.id].setIcon(icon);
                 });
+
                 if (campusMarkers['igu']) {
                     const newGroup = L.layerGroup();
-                    campusMarkers['igu'].eachLayer(layer => {
-                        const latlng = layer.getLatLng();
-                        const iguData = universities.find(u => u.id === 'igu');
-                        const campus = iguData.campuses.find(c => c.lat === latlng.lat && c.lng === latlng.lng);
-                        if (campus) {
-                            const icon = createCampusIcon(campus);
-                            const newLayer = L.marker([campus.lat, campus.lng], { icon });
-                            if (layer.getPopup()) {
-                                newLayer.bindPopup(layer.getPopup().getContent());
+                    const iguData = universities.find(u => u.id === 'igu');
+                    if (iguData && iguData.campuses) {
+                        iguData.campuses.forEach(c => {
+                            const icon = createCampusIcon(c);
+                            const newLayer = L.marker([c.lat, c.lng], { icon });
+                            const oldLayer = campusMarkersMap[c.lat.toFixed(6) + ',' + c.lng.toFixed(6)];
+                            if (oldLayer && oldLayer.getPopup()) {
+                                newLayer.bindPopup(oldLayer.getPopup().getContent());
+                            } else {
+                                let popupHtml = `<b>${c.name}</b><br><span style="color:#a8d8ea;">${c.address}</span>`;
+                                if (c.subdivisions && c.subdivisions.length > 0) {
+                                    popupHtml +=
+                                        '<br><br><span style="font-weight:bold;color:#a8d8ea;">Подразделения:</span>';
+                                    c.subdivisions.forEach(sub => {
+                                        const logoHtml = sub.logo ?
+                                            `<img src="${sub.logo}" alt="${sub.name}" style="width:24px;height:24px;border-radius:50%;object-fit:contain;background:#0a0f1a;border:1px solid #414d63;">` :
+                                            `<span style="display:inline-block;width:24px;height:24px;"></span>`;
+                                        popupHtml += `<div style="display:flex;align-items:center;gap:8px;margin:4px 0;">
+                                                ${logoHtml}
+                                                <span style="color:#a8d8ea;">${sub.name}</span>
+                                            </div>`;
+                                    });
+                                }
+                                newLayer.bindPopup(popupHtml);
                             }
                             newGroup.addLayer(newLayer);
-                        }
-                    });
+                            const key = c.lat.toFixed(6) + ',' + c.lng.toFixed(6);
+                            campusMarkersMap[key] = newLayer;
+                        });
+                    }
                     map.removeLayer(campusMarkers['igu']);
                     campusMarkers['igu'] = newGroup;
                     if (activeUniId === 'igu') map.addLayer(campusMarkers['igu']);
@@ -2068,6 +2377,64 @@
 
             window.selectUniversity = selectUniversity;
             updateInfoPanel(null);
+
+            // ---------- МОДАЛЬНОЕ ОКНО КОМАНДЫ ----------
+            const teamTrigger = document.getElementById('teamTrigger');
+            const modalTeam = document.getElementById('modalTeam');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+
+            function positionModalAbove(anchor) {
+                const rect = anchor.getBoundingClientRect();
+                const modalWidth = modalTeam.offsetWidth || 160;
+                const modalHeight = modalTeam.offsetHeight || 120;
+
+                let top = rect.top - modalHeight - 10;
+                let left = rect.left + rect.width / 2 - modalWidth / 2;
+
+                // Коррекция, чтобы не вылезало за экран
+                if (top < 10) top = 10;
+                if (left < 10) left = 10;
+                if (left + modalWidth > window.innerWidth - 10) {
+                    left = window.innerWidth - modalWidth - 10;
+                }
+
+                modalTeam.style.top = top + 'px';
+                modalTeam.style.left = left + 'px';
+            }
+
+            function openTeamModal(e) {
+                e.stopPropagation();
+                modalTeam.style.display = 'block';
+                positionModalAbove(teamTrigger);
+            }
+
+            function closeTeamModal() {
+                modalTeam.style.display = 'none';
+            }
+
+            teamTrigger.addEventListener('click', openTeamModal);
+            closeModalBtn.addEventListener('click', closeTeamModal);
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modalTeam.style.display === 'block') {
+                    closeTeamModal();
+                }
+            });
+
+            window.addEventListener('resize', function() {
+                if (modalTeam.style.display === 'block') {
+                    positionModalAbove(teamTrigger);
+                }
+            });
+
+            // Клик вне модалки и вне триггера — закрываем
+            document.addEventListener('click', function(e) {
+                if (modalTeam.style.display === 'block') {
+                    if (!teamTrigger.contains(e.target) && !modalTeam.contains(e.target)) {
+                        closeTeamModal();
+                    }
+                }
+            });
 
         })();
     </script>

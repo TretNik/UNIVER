@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ИГУ — Иркутский государственный университет</title>
+  <style>
+    :root {
+      --bg-dark: #0b132b;
+      --bg-card: #16213e;
+      --accent: #0055a4;
+      --accent-hover: #004483;
+      --text-main: #eef2f7;
+      --text-muted: #a0b0d0;
+      --glow: 0 0 12px rgba(0, 85, 164, 0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; transition: 0.3s; }
+    ul { list-style: none; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0;
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    .reveal-delay-1 { animation-delay: 0.1s; }
+    .reveal-delay-2 { animation-delay: 0.2s; }
+    .reveal-delay-3 { animation-delay: 0.3s; }
+
+    /* === ФИЛЬТРЫ ДЛЯ ЭМОДЗИ === */
+    .emoji {
+      filter: grayscale(100%) sepia(100%) hue-rotate(174deg) saturate(1.5) brightness(0.75) contrast(2.05);
+      display: inline-block;
+    }
+    .emoji-bright {
+      filter: grayscale(100%) sepia(100%) hue-rotate(174deg) saturate(1.5) brightness(0.9) contrast(2.05);
+      display: inline-block;
+    }
+    .emoji-img {
+      filter: grayscale(100%) sepia(100%) hue-rotate(174deg) saturate(1.2) brightness(0.9) contrast(1.5);
+      display: inline-block;
+      width: 1.6rem;
+      height: 1.6rem;
+      vertical-align: middle;
+      object-fit: contain;
+    }
+    .emoji-img-main {
+      filter: grayscale(100%) sepia(100%) hue-rotate(174deg) saturate(4.5) brightness(1) contrast(0.65);
+      display: inline-block;
+      width: 1.6rem;
+      height: 1.6rem;
+      vertical-align: middle;
+      object-fit: contain;
+    }
+    .emoji-target {
+      filter: grayscale(100%) sepia(100%) hue-rotate(174deg) saturate(1.6) brightness(0.65) contrast(3);
+      display: inline-block;
+    }
+
+    /* Специальный фильтр для 🎓 в стипендиях */
+    .emoji-scholarship {
+      filter: grayscale(100%) sepia(100%) hue-rotate(174deg) saturate(2.5) brightness(0.9) contrast(0.9);
+      display: inline-block;
+    }
+
+    /* Флаги без фильтра */
+    .flag {
+      display: inline-block;
+    }
+
+    /* Шапка */
+    header {
+      background-color: var(--bg-card);
+      padding: 0.5rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.2rem;
+    }
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-main);
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.3px;
+      transition: 0.3s;
+    }
+    .logo-link:hover { color: var(--accent); }
+    .logo-link .logo-text { font-weight: 700; font-size: 1.1rem; white-space: nowrap; }
+    .logo-img {
+      height: 38px;
+      width: auto;
+      border-radius: 10px;
+      transition: transform 0.2s;
+    }
+    .logo-img:hover { transform: scale(1.02); }
+
+    .nav-list {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .nav-link {
+      color: var(--text-muted);
+      font-weight: 600;
+      position: relative;
+      white-space: nowrap;
+      font-size: 0.9rem;
+    }
+    .nav-link:hover { color: var(--accent); }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: 0.3s;
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    .back-to-map-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.4rem 1rem;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 2px 8px rgba(0, 85, 164, 0.3);
+      transition: 0.3s;
+      white-space: nowrap;
+    }
+    .back-to-map-btn:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 4px 16px rgba(0, 85, 164, 0.5);
+      transform: translateY(-1px);
+    }
+    .back-to-map-btn .arrow-icon { display: inline-block; font-size: 1.1rem; line-height: 1; }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-dark);
+      padding: 3rem 1rem 3.5rem;
+      text-align: center;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('https://i.ibb.co/Xx1b1cMy/image.png');
+      background-size: cover;
+      background-position: center;
+      mask-image: linear-gradient(to bottom right, black 0%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom right, black 0%, transparent 100%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+      transition: opacity 0.8s ease;
+    }
+    .hero.bg-loaded::before { opacity: 0.4; }
+    .hero .container { position: relative; z-index: 1; }
+    .hero-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto 0.8rem;
+      background: var(--bg-dark);
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 20px rgba(0, 85, 164, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .hero h1 { font-size: 2.5rem; margin-bottom: 0.6rem; color: #fff; text-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+    .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 700px; margin: 0 auto; }
+    .hero-btn {
+      margin-top: 1.2rem;
+      padding: 0.7rem 2rem;
+      background: var(--accent);
+      color: white;
+      border-radius: 50px;
+      font-weight: bold;
+      box-shadow: var(--glow);
+      animation: pulse 2s infinite;
+      display: inline-block;
+      font-size: 0.95rem;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0, 85, 164, 0.7); }
+      50% { box-shadow: 0 0 0 12px rgba(0, 85, 164, 0); }
+    }
+    .hero-btn:hover { background: var(--accent-hover); transform: scale(1.05); }
+
+    /* Секции */
+    section { padding: 2rem 0; }
+    h2 {
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 1.2rem;
+      color: var(--text-main);
+      position: relative;
+    }
+    h2::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 3px;
+      background: var(--accent);
+      margin: 6px auto 0;
+      border-radius: 2px;
+    }
+
+    #about, #science, #benefits, #life, #partners, #partners-logos {
+      background: linear-gradient(145deg, #0f1a33, #16213e);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      margin: 0.5rem 0 1rem;
+    }
+    .stat-item { text-align: center; min-width: 100px; }
+    .stat-item .stat-number { font-size: 2.2rem; font-weight: 700; color: var(--accent); line-height: 1.2; }
+    .stat-item .stat-label { font-size: 0.85rem; color: var(--text-muted); opacity: 0.9; line-height: 1.2; }
+    .stat-item .stat-icon { font-size: 1.6rem; display: block; margin-bottom: 0.1rem; }
+
+    .mission-card {
+      background: linear-gradient(145deg, #16213e, #1e2d5a);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 85, 164, 0.3);
+      box-shadow: 0 2px 12px rgba(0, 85, 164, 0.15);
+      margin-top: 0.5rem;
+      transition: 0.3s;
+    }
+    .mission-card:hover {
+      box-shadow: 0 4px 20px rgba(0, 85, 164, 0.25);
+      border-color: var(--accent);
+    }
+    .mission-card h3 { color: var(--accent); font-size: 1.1rem; margin-bottom: 0.2rem; }
+    .mission-card p { font-size: 0.92rem; line-height: 1.5; color: var(--text-muted); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.8rem;
+    }
+    .card {
+      background: var(--bg-card);
+      padding: 0.9rem 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.05);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: 0.3s;
+      height: auto;
+      align-self: start;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: var(--glow);
+    }
+    .card h3 { color: var(--accent); font-size: 1rem; margin-bottom: 0.2rem; }
+    .card p { font-size: 0.88rem; line-height: 1.4; color: var(--text-muted); }
+    .card a { color: var(--accent); }
+    .card a:hover { text-decoration: underline; }
+    .card ul {
+      list-style: disc;
+      padding-left: 1.2rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0.2rem 0;
+    }
+    .card ul li {
+      padding: 0.1rem 0;
+    }
+
+    /* Специальный стиль для списка объединений - несколько колонок */
+    .associations-list {
+      column-count: 2;
+      column-gap: 1.5rem;
+    }
+    .associations-list li {
+      break-inside: avoid;
+      padding: 0.1rem 0;
+    }
+
+    /* ВУЦ */
+    .vuc-section {
+      background: var(--bg-dark);
+      position: relative;
+      overflow: hidden;
+    }
+    .vuc-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('https://i.ibb.co/Zp5Trdwv/image.png');
+      background-size: cover;
+      background-position: center;
+      mask-image: linear-gradient(to bottom right, black 0%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom right, black 0%, transparent 100%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+      transition: opacity 0.8s ease;
+    }
+    .vuc-section.bg-loaded::before { opacity: 0.2; }
+    .vuc-section .container { position: relative; z-index: 1; }
+
+    .vuc-highlight {
+      background: rgba(0,85,164,0.15);
+      border-left: 4px solid var(--accent);
+      padding: 0.8rem 1.2rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+    .vuc-highlight h3 { font-size: 1.1rem; margin-bottom: 0.2rem; }
+    .vuc-highlight p { font-size: 0.9rem; color: var(--text-muted); }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.6rem;
+    }
+    .benefit-item {
+      background: rgba(255,255,255,0.03);
+      padding: 0.6rem 0.4rem;
+      border-radius: 6px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: 0.3s;
+    }
+    .benefit-item:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: var(--glow);
+    }
+    .benefit-item .benefit-icon { font-size: 1.6rem; margin-bottom: 0.1rem; }
+    .benefit-item h4 { font-size: 0.9rem; margin-bottom: 0.1rem; }
+    .benefit-item p { font-size: 0.75rem; line-height: 1.3; opacity: 0.8; color: var(--text-muted); }
+
+    /* Партнёры (университеты-партнёры) */
+    .partners-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .partner-country {
+      background: rgba(255,255,255,0.03);
+      padding: 0.8rem 1rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .partner-country h4 {
+      color: var(--accent);
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 0.3rem;
+    }
+    .partner-country h4 .flag {
+      display: inline-block;
+      margin-right: 6px;
+    }
+    .partner-country ul {
+      list-style: none;
+      padding: 0;
+    }
+    .partner-country li {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      padding: 0.15rem 0;
+      line-height: 1.4;
+    }
+
+    /* Партнёры ИГУ — логотипы (новая панель) */
+    .partners-logos-block {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 0;
+      margin: 1.5rem 0;
+      border: 2px solid var(--accent);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      overflow: hidden;
+      height: 500px;
+      position: relative;
+    }
+    .partners-logos-scroll {
+      display: flex;
+      flex-wrap: nowrap;
+      height: 100%;
+      will-change: transform;
+      transition: none;
+    }
+    .partners-logo-item {
+      flex: 0 0 auto;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow: hidden;
+      position: relative;
+    }
+    .partners-logo-item img {
+      display: block;
+      height: 100%;
+      width: auto;
+      max-width: none;
+      object-fit: contain;
+      margin: 0 auto;
+      mask-image: 
+        linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, black 2%, black 98%, transparent 100%);
+      mask-composite: intersect;
+      -webkit-mask-image: 
+        linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, black 2%, black 98%, transparent 100%);
+      -webkit-mask-composite: source-in, source-in;
+    }
+
+    /* Стипендии */
+    .scholarship-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .scholarship-item {
+      background: rgba(255,255,255,0.03);
+      padding: 0.5rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-left: 3px solid var(--accent);
+    }
+
+    /* Белый прямоугольник с логотипами (3 логотипа, только мобильная анимация) */
+    .logo-footer-block {
+      background: #ffffff;
+      border-radius: 0;
+      padding: 0;
+      margin: 1rem 0;
+      border: 2px solid var(--accent);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+      overflow: hidden;
+      height: 110px;
+    }
+    .logo-scroll {
+      display: flex;
+      align-items: stretch;
+      height: 100%;
+      width: 100%;
+    }
+    .logo-item {
+      flex: 1 1 33.333%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      overflow: hidden;
+    }
+    .logo-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Основной футер */
+    .contacts-footer {
+      background: #060a17;
+      padding: 2.5rem 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .contacts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .address-block {
+      background: rgba(255,255,255,0.05);
+      padding: 0.8rem 1rem;
+      border-radius: 6px;
+    }
+    .address-title { color: var(--accent); font-weight: bold; font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .address-block p { font-size: 0.85rem; line-height: 1.5; margin-bottom: 0.2rem; }
+    .address-block p:last-child { margin-bottom: 0; }
+    .address-block a { color: var(--accent); }
+    .address-block a:hover { text-decoration: underline; }
+
+    /* Блок с информацией о разработчиках */
+    .footer-credits-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      width: 100%;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .footer-credits {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      cursor: pointer;
+    }
+
+    .footer-credits .credits-text {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    .footer-credits .credits-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-credits .credits-logo {
+      height: 32px;
+      width: auto;
+      border-radius: 8px;
+    }
+
+    .footer-credits .credits-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      opacity: 1;
+    }
+
+    .footer-credits .credits-highlight {
+      color: #a8f5f7;
+    }
+
+    /* Подсказка */
+    .credits-tooltip {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-card);
+      color: var(--text-main);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.6rem;
+      font-weight: 500;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    .credits-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 4px solid transparent;
+      border-top-color: var(--bg-card);
+    }
+
+    .footer-credits-wrapper:hover .credits-tooltip {
+      opacity: 1;
+    }
+
+    /* Модальное окно с командой */
+    .team-modal {
+      position: fixed;
+      background: var(--bg-card);
+      color: var(--text-main);
+      border-radius: 12px;
+      padding: 8px 10px 10px;
+      width: 150px;
+      max-width: 92vw;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7), var(--glow);
+      border: 1px solid rgba(255,255,255,0.05);
+      z-index: 1000;
+      display: none;
+      animation: popIn 0.2s ease;
+    }
+
+    .team-modal h2 {
+      margin: 0 0 6px 0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-main);
+      text-align: center;
+      border-bottom: 1.5px solid var(--accent);
+      padding-bottom: 4px;
+      letter-spacing: 0.3px;
+    }
+
+    .team-modal .team-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 8px 0;
+    }
+
+    .team-modal .team-list li {
+      padding: 3px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.55rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .team-modal .team-list li:last-child {
+      border-bottom: none;
+    }
+
+    .team-modal .team-list .name {
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 0.55rem;
+    }
+
+    .team-modal .team-list .role {
+      background: rgba(0, 85, 164, 0.2);
+      color: var(--accent);
+      padding: 1px 5px;
+      border-radius: 12px;
+      font-size: 0.45rem;
+      font-weight: 700;
+      white-space: nowrap;
+      border: 1px solid rgba(0, 85, 164, 0.12);
+      flex-shrink: 0;
+      letter-spacing: 0.2px;
+    }
+
+    .team-modal .close-btn {
+      display: block;
+      margin: 0 auto;
+      padding: 3px 14px;
+      background: rgba(255,255,255,0.05);
+      color: var(--text-muted);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      font-size: 0.55rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .team-modal .close-btn:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* Адаптив */
+    @media (max-width: 768px) {
+      .hero { padding: 2rem 1rem 2.5rem; }
+      .hero h1 { font-size: 1.8rem; }
+      .hero-logo { width: 54px; height: 54px; }
+      header { padding: 0.4rem 0; }
+      .logo-img { height: 34px; }
+      .logo-link .logo-text { font-size: 0.95rem; }
+      .nav-link { font-size: 0.8rem; }
+      .nav-list { gap: 0.8rem; }
+      .back-to-map-btn { padding: 0.3rem 0.8rem; font-size: 0.75rem; gap: 4px; }
+      .back-to-map-btn .arrow-icon { font-size: 0.9rem; }
+      section { padding: 1.5rem 0; }
+      h2 { font-size: 1.5rem; margin-bottom: 0.8rem; }
+      .stats-row { gap: 1.2rem; }
+      .stat-item .stat-number { font-size: 1.8rem; }
+      .stat-item .stat-label { font-size: 0.75rem; }
+      .grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.6rem; }
+      .card { padding: 0.6rem 0.8rem; }
+      .card h3 { font-size: 0.9rem; }
+      .card p { font-size: 0.8rem; }
+      .card ul { font-size: 0.78rem; }
+      .associations-list {
+        column-count: 2;
+        column-gap: 1rem;
+      }
+      .benefits-grid { grid-template-columns: repeat(2, 1fr); gap: 0.4rem; }
+      .benefit-item { padding: 0.4rem 0.2rem; }
+      .benefit-item .benefit-icon { font-size: 1.4rem; }
+      .benefit-item h4 { font-size: 0.8rem; }
+      .benefit-item p { font-size: 0.7rem; }
+      .logo-footer-block { height: 110px; }
+      .logo-scroll {
+        width: 300%;
+        animation: slideShow 18s ease-in-out infinite;
+      }
+      .logo-item { flex: 0 0 33.333%; }
+      @keyframes slideShow {
+        0% { transform: translateX(0); }
+        15% { transform: translateX(0); }
+        25% { transform: translateX(-33.333%); }
+        40% { transform: translateX(-33.333%); }
+        50% { transform: translateX(-66.666%); }
+        65% { transform: translateX(-66.666%); }
+        75% { transform: translateX(-33.333%); }
+        90% { transform: translateX(-33.333%); }
+        100% { transform: translateX(0); }
+      }
+      .partners-grid { grid-template-columns: 1fr 1fr; }
+      .scholarship-list { grid-template-columns: 1fr; }
+      .life-two-cols { grid-template-columns: 1fr 1fr !important; }
+
+      .partners-logos-block {
+        height: 46.67vh;
+        min-height: 270px;
+      }
+      .partners-logo-item {
+        padding: 12px;
+      }
+
+      .footer-credits .credits-logo {
+        height: 28px;
+      }
+      .footer-credits .credits-text {
+        font-size: 0.8rem;
+      }
+      .footer-credits .credits-name {
+        font-size: 0.9rem;
+      }
+      .team-modal {
+        width: 130px;
+      }
+      .team-modal h2 {
+        font-size: 0.6rem;
+      }
+      .team-modal .team-list li {
+        font-size: 0.5rem;
+      }
+      .team-modal .team-list .role {
+        font-size: 0.4rem;
+        padding: 0 4px;
+      }
+      .team-modal .close-btn {
+        font-size: 0.5rem;
+        padding: 2px 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero { padding: 1.5rem 1rem 2rem; }
+      .hero h1 { font-size: 1.4rem; }
+      .hero-logo { width: 46px; height: 46px; }
+      .logo-img { height: 28px; }
+      .logo-link .logo-text { font-size: 0.85rem; }
+      .nav-link { font-size: 0.75rem; }
+      .nav-list { gap: 0.5rem; }
+      .back-to-map-btn { padding: 0.25rem 0.6rem; font-size: 0.7rem; gap: 3px; }
+      .back-to-map-btn .arrow-icon { font-size: 0.8rem; }
+      section { padding: 1rem 0; }
+      h2 { font-size: 1.2rem; margin-bottom: 0.6rem; }
+      .stats-row { gap: 0.8rem; flex-wrap: wrap; justify-content: center; }
+      .stat-item { min-width: 70px; }
+      .stat-item .stat-number { font-size: 1.5rem; }
+      .stat-item .stat-label { font-size: 0.7rem; }
+      .grid { grid-template-columns: 1fr; gap: 0.5rem; }
+      .card { padding: 0.5rem 0.7rem; }
+      .associations-list {
+        column-count: 1;
+      }
+      .benefits-grid { grid-template-columns: repeat(2, 1fr); gap: 0.3rem; }
+      .benefit-item { padding: 0.3rem 0.2rem; }
+      .logo-footer-block { height: 110px; }
+      .contacts-grid { grid-template-columns: 1fr; }
+      .partners-grid { grid-template-columns: 1fr; }
+      .life-two-cols { grid-template-columns: 1fr !important; }
+
+      .partners-logos-block {
+        height: 46.67vh;
+        min-height: 235px;
+      }
+      .partners-logo-item {
+        padding: 8px;
+      }
+
+      .footer-credits .credits-logo {
+        height: 24px;
+      }
+      .footer-credits .credits-text {
+        font-size: 0.75rem;
+      }
+      .footer-credits .credits-name {
+        font-size: 0.85rem;
+      }
+      .team-modal {
+        width: 110px;
+        padding: 6px 8px;
+      }
+      .team-modal h2 {
+        font-size: 0.55rem;
+      }
+      .team-modal .team-list li {
+        font-size: 0.45rem;
+      }
+      .team-modal .team-list .role {
+        font-size: 0.35rem;
+        padding: 0 3px;
+      }
+      .team-modal .close-btn {
+        font-size: 0.45rem;
+        padding: 2px 8px;
+      }
+      .credits-tooltip {
+        font-size: 0.5rem;
+        padding: 3px 8px;
+      }
+    }
+
+    .life-two-cols {
+      grid-template-columns: 1fr 1fr;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-container">
+      <a href="#" class="logo-link" aria-label="ЮНИВЕР — на главную">
+        <img src="https://i.ibb.co/qM93nPSM/image.png" alt="Логотип ЮНИВЕР" class="logo-img" />
+        <span class="logo-text">ЮНИВЕР</span>
+      </a>
+      <nav>
+        <ul class="nav-list">
+          <li><a href="#about" class="nav-link">О вузе</a></li>
+          <li><a href="#science" class="nav-link">Наука</a></li>
+          <li><a href="#vuc" class="nav-link">ВУЦ</a></li>
+          <li><a href="#benefits" class="nav-link">Льготы</a></li>
+          <li><a href="#partners" class="nav-link">Партнёры</a></li>
+          <li><a href="#contacts" class="nav-link">Контакты</a></li>
+        </ul>
+      </nav>
+      <a href="#" class="back-to-map-btn" id="backToMapBtn">
+        <span class="arrow-icon">←</span> Вернуться к карте
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="heroSection">
+      <div class="container reveal">
+        <div class="hero-logo reveal reveal-delay-1">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSJf3dF2b-KoOpfdjAMAKon4KsLhFfZPosqiMeOopUPA&s" alt="Логотип ИГУ" />
+        </div>
+        <h1 class="reveal reveal-delay-1">Иркутский государственный университет (ИГУ)</h1>
+        <p class="reveal reveal-delay-2">Один из старейших университетов Сибири. Образование, наука, карьера и социальная поддержка студентов.</p>
+        <a href="#contacts" class="hero-btn reveal reveal-delay-3">Связаться с приёмной комиссией</a>
+      </div>
+    </section>
+
+    <!-- О вузе -->
+    <section id="about">
+      <div class="container">
+        <h2>О вузе</h2>
+        <div class="stats-row reveal reveal-delay-1">
+          <div class="stat-item">
+            <span class="stat-icon emoji">📅</span>
+            <div class="stat-number">1918</div>
+            <div class="stat-label">Год основания</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">
+              <img src="https://i.ibb.co/5xhzsDwV/image.png" alt="Студенты" class="emoji-img" />
+            </span>
+            <div class="stat-number">17 000+</div>
+            <div class="stat-label">Студентов</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon emoji">🏛️</span>
+            <div class="stat-number">17</div>
+            <div class="stat-label">Институтов<br>и факультетов</div>
+          </div>
+        </div>
+        <div class="mission-card reveal reveal-delay-2">
+          <h3>Миссия ИГУ</h3>
+          <p>Подготовка высококвалифицированных специалистов, развитие науки и интеграция в международное образовательное пространство. Университет активно поддерживает студенческие инициативы, волонтёрство, спорт и творческие проекты.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Наука и исследования -->
+    <section id="science">
+      <div class="container">
+        <h2>Наука и исследования</h2>
+        <div class="grid">
+          <div class="card reveal reveal-delay-1">
+            <h3><span class="emoji">🔬</span> Научные центры</h3>
+            <p>НИИ и центры по естественным, гуманитарным и социальным наукам.</p>
+          </div>
+          <div class="card reveal reveal-delay-2">
+            <h3><span class="emoji">💰</span> Гранты</h3>
+            <p>РФФИ, РНФ, федеральные и международные конкурсы.</p>
+          </div>
+          <div class="card reveal reveal-delay-3">
+            <h3><span class="emoji">📄</span> Публикации</h3>
+            <p>Собственные журналы, всероссийские и международные конференции.</p>
+          </div>
+        </div>
+        <div style="margin-top:1rem;">
+          <div class="card reveal reveal-delay-1">
+            <h3><span class="emoji">🌍</span> Международная деятельность</h3>
+            <ul style="list-style:disc; padding-left:1.2rem; color:var(--text-muted); font-size:0.88rem; line-height:1.6;">
+              <li>Образовательные услуги для иностранных граждан</li>
+              <li>Совместные образовательные программы (двойные дипломы)</li>
+              <li>Научно-исследовательские проекты с зарубежными организациями</li>
+              <li>Академическая мобильность (обмен студентами, аспирантами, преподавателями)</li>
+              <li>Летние школы и конференции с международным участием</li>
+            </ul>
+          </div>
+        </div>
+        <div style="margin-top:1rem;">
+          <div class="card reveal reveal-delay-2">
+            <h3><span class="emoji">📚</span> Программы дополнительного образования ИФИЯМ</h3>
+            <ul style="list-style:disc; padding-left:1.2rem; color:var(--text-muted); font-size:0.88rem; line-height:1.6;">
+              <li>«Переводчик в сфере профессиональной коммуникации»</li>
+              <li>«Преподаватель иностранного языка общеобразовательной школы»</li>
+              <li>«Преподавание русского как иностранного»</li>
+              <li>Курсы разговорных языков (английский, немецкий, французский, испанский, итальянский, китайский, японский, корейский, бурятский, монгольский, чешский, польский)</li>
+              <li>Курсы гидов-переводчиков (английский, китайский)</li>
+              <li>Подготовка к ЕГЭ по русскому языку, английскому языку, литературе, истории, обществознанию</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ВУЦ -->
+    <section id="vuc" class="vuc-section">
+      <div class="container">
+        <h2>Военный учебный центр (ВУЦ)</h2>
+        <div class="vuc-highlight reveal reveal-delay-1">
+          <h3>Военный учебный центр имени дважды Героя Советского Союза генерала армии А. П. Белобородова</h3>
+          <p>Обучение по программам военной подготовки для получения звания сержанта или офицера запаса. Занятия параллельно с основной образовательной программой.</p>
+        </div>
+        <div class="grid">
+          <div class="card reveal reveal-delay-2">
+            <h3><span class="emoji">🎖️</span> Специальности</h3>
+            <p>Сержант запаса, офицер запаса (перечень уточняется в ВУЦ).</p>
+          </div>
+          <div class="card reveal reveal-delay-3">
+            <h3><span class="emoji">📋</span> Условия</h3>
+            <p>Гражданство РФ, возраст до 30 лет, здоровье и физподготовка.</p>
+          </div>
+        </div>
+        <div class="card reveal reveal-delay-1" style="margin-top: 0.8rem;">
+          <h3><span class="emoji-bright">📞</span> Контакты ВУЦ</h3>
+          <p style="font-size:0.9rem; line-height:1.5;">
+            <strong>Адрес:</strong> г. Иркутск, ул. Ленина, 8, корпус Б, каб. 310 (отборочная комиссия)<br>
+            <strong>Телефон:</strong> <a href="tel:+73952242665">+7 (3952) 24-26-65</a>, <a href="tel:+73952242763">24-27-63</a><br>
+            <strong>Email:</strong> <a href="mailto:voencentre@isu.ru">voencentre@isu.ru</a><br>
+            <span style="font-size:0.8rem; opacity:0.7;">Сайт ВУЦ: <a href="http://voencentre.isu.ru" target="_blank">voencentre.isu.ru</a></span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Партнёры ИГУ (логотипы) — новая панель -->
+    <section id="partners-logos">
+      <div class="container">
+        <h2>Партнёры ИГУ</h2>
+        <div class="partners-logos-block" id="partnersBlock">
+          <div class="partners-logos-scroll" id="partnersScroll">
+            <div class="partners-logo-item"><img src="https://i.ibb.co/S7BNTb6D/image.png" alt="Партнёр 1" /></div>
+            <div class="partners-logo-item"><img src="https://i.ibb.co/LzShNn0j/image.png" alt="Партнёр 2" /></div>
+            <div class="partners-logo-item"><img src="https://i.ibb.co/p6FScVM3/image.png" alt="Партнёр 3" /></div>
+            <div class="partners-logo-item"><img src="https://i.ibb.co/YTPQ59jc/image.png" alt="Партнёр 4" /></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Университеты-партнёры ИГУ (список) -->
+    <section id="partners">
+      <div class="container">
+        <h2>Университеты-партнёры ИГУ</h2>
+        <div class="partners-grid reveal reveal-delay-1">
+          <div class="partner-country">
+            <h4><span class="flag">🇦🇺</span> Австралия</h4>
+            <ul><li>Университет Южного Квинсленда</li></ul>
+          </div>
+          <div class="partner-country">
+            <h4><span class="flag">🇧🇾</span> Белоруссия</h4>
+            <ul><li>Белорусский государственный университет</li></ul>
+          </div>
+          <div class="partner-country">
+            <h4><span class="flag">🇧🇪</span> Бельгия</h4>
+            <ul><li>Университет Лёвена</li><li>Университет Монс</li></ul>
+          </div>
+          <div class="partner-country">
+            <h4><span class="flag">🇻🇳</span> Вьетнам</h4>
+            <ul><li>Ханойский государственный университет</li><li>Университет Дананга</li></ul>
+          </div>
+          <div class="partner-country">
+            <h4><span class="flag">🇮🇳</span> Индия</h4>
+            <ul><li>Университет Джавахарлала Неру</li></ul>
+          </div>
+          <div class="partner-country">
+            <h4><span class="flag">🇪🇸</span> Испания</h4>
+            <ul><li>Университет Алкала де Энарес</li><li>Университет Кадиса</li></ul>
+          </div>
+          <div class="partner-country">
+            <h4><span class="flag">🇰🇿</span> Казахстан</h4>
+            <ul><li>ВКТУ им. Д. Серикбаева</li><li>ВКУ им. Сарсена Аманжолова</li><li>Павлодарский ГПИ</li></ul>
+          </div>
+          <div class="partner-country">
+            <h4><span class="flag">🇰🇬</span> Киргизия</h4>
+            <ul><li>КНУ им. Жусупа Баласагына</li></ul>
+          </div>
+          <div class="partner-country">
+            <h4><span class="flag">🇨🇳</span> Китай</h4>
+            <ul><li>Северо-Западный политехнический университет</li><li>Цзилиньский университет</li><li>Народный университет Китая</li></ul>
+          </div>
+          <div class="partner-country">
+            <h4><span class="flag">🇲🇳</span> Монголия</h4>
+            <ul><li>Монгольский государственный университет</li><li>МГУ науки и технологии</li><li>МГУ образования</li></ul>
+          </div>
+          <div class="partner-country">
+            <h4><span class="flag">🇰🇷</span> Республика Корея</h4>
+            <ul><li>Национальный университет Кёнбук</li><li>Университет ЁнгНам</li><li>Университет Кукмин</li></ul>
+          </div>
+          <div class="partner-country">
+            <h4><span class="flag">🇵🇱</span> Польша</h4>
+            <ul><li>Ягеллонский университет</li><li>Университет им. Адама Мицкевича</li></ul>
+          </div>
+          <div class="partner-country">
+            <h4><span class="flag">🇫🇷</span> Франция</h4>
+            <ul><li>Университет Савойя Монблан</li><li>Реннский институт политических исследований</li></ul>
+          </div>
+          <div class="partner-country">
+            <h4><span class="flag">🇯🇵</span> Япония</h4>
+            <ul><li>Университет Хоккайдо</li><li>Университет Кюсю</li><li>Университет Канадзава</li></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Льготы и преимущества -->
+    <section id="benefits">
+      <div class="container">
+        <h2>Льготы и преимущества</h2>
+        <div class="benefits-grid">
+          <div class="benefit-item reveal reveal-delay-1">
+            <span class="benefit-icon emoji">🏷️</span>
+            <h4>Особая квота</h4>
+            <p>Инвалиды, сироты и др.</p>
+          </div>
+          <div class="benefit-item reveal reveal-delay-2">
+            <span class="benefit-icon emoji-bright">❗</span>
+            <h4>Отдельная квота</h4>
+            <p>Участники СВО и семьи</p>
+          </div>
+          <div class="benefit-item reveal reveal-delay-3">
+            <span class="benefit-icon emoji-target">🤝</span>
+            <h4>Целевое обучение</h4>
+            <p>Гарантированное трудоустройство</p>
+          </div>
+          <div class="benefit-item reveal reveal-delay-1">
+            <span class="benefit-icon">
+              <img src="https://i.ibb.co/j9WkYh7V/image.png" alt="Скидки" class="emoji-img-main" />
+            </span>
+            <h4>Скидки</h4>
+            <p>За высокие баллы ЕГЭ</p>
+          </div>
+          <div class="benefit-item reveal reveal-delay-2">
+            <span class="benefit-icon emoji">💸</span>
+            <h4>Стипендии</h4>
+            <p>Академическая, социальная, повышенная</p>
+          </div>
+          <div class="benefit-item reveal reveal-delay-3">
+            <span class="benefit-icon emoji">⭐</span>
+            <h4>БВИ и ИД</h4>
+            <p>Без вступительных испытаний</p>
+          </div>
+        </div>
+        <div style="margin-top:1.2rem;">
+          <div class="card reveal reveal-delay-1">
+            <h3><span class="emoji-scholarship">🎓</span> Виды стипендий</h3>
+            <div class="scholarship-list">
+              <div class="scholarship-item">Академическая стипендия</div>
+              <div class="scholarship-item">Социальная стипендия</div>
+              <div class="scholarship-item">Повышенная государственная академическая стипендия</div>
+              <div class="scholarship-item">Государственная стипендия аспирантам</div>
+              <div class="scholarship-item">Стипендия Президента РФ</div>
+              <div class="scholarship-item">Стипендия Правительства РФ</div>
+              <div class="scholarship-item">Стипендия Президента РФ (приоритетные направления)</div>
+              <div class="scholarship-item">Стипендия Правительства РФ (приоритетные направления)</div>
+              <div class="scholarship-item">Стипендия Губернатора Иркутской области</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:1rem;">
+          <div class="card reveal reveal-delay-2">
+            <h3><span class="emoji">🤝</span> Социальная поддержка</h3>
+            <ul style="list-style:disc; padding-left:1.2rem; color:var(--text-muted); font-size:0.88rem; line-height:1.6;">
+              <li>Материальная помощь</li>
+              <li>Бесплатное медицинское обслуживание</li>
+              <li>Компенсации и льготы для детей-сирот и детей, оставшихся без попечения родителей</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Студенческая жизнь и трудоустройство -->
+    <section id="life">
+      <div class="container">
+        <h2>Студенческая жизнь и трудоустройство</h2>
+        
+        <!-- Объединения на всю ширину с двухколоночным списком -->
+        <div class="card reveal reveal-delay-1" style="margin-bottom: 0.8rem;">
+          <h3><span class="emoji">🎭</span> Объединения</h3>
+          <ul class="associations-list">
+            <li>Арт-отдел</li>
+            <li>Клуб интеллектуалов</li>
+            <li>Клуб весёлых и находчивых</li>
+            <li>Клуб политологов</li>
+            <li>Волонтерский центр ППОС ИГУ</li>
+            <li>Секция горного туризма «ГОСЫ»</li>
+            <li>Медиацентр ППОС ИГУ</li>
+            <li>Спортивный клуб ИГУ</li>
+            <li>Центр по подготовке и проведению игр</li>
+          </ul>
+        </div>
+
+        <!-- Сетка для общежитий и трудоустройства -->
+        <div class="grid life-two-cols">
+          <div class="card reveal reveal-delay-2">
+            <h3><span class="emoji">🏠</span> Общежития</h3>
+            <p>Места для иногородних. Условия заселения в профкоме.</p>
+          </div>
+          <div class="card reveal reveal-delay-3">
+            <h3><span class="emoji-bright">💼</span> Трудоустройство</h3>
+            <p>Центр карьеры, ярмарки вакансий, стажировки.</p>
+          </div>
+        </div>
+
+        <!-- Остальные карточки -->
+        <div style="margin-top: 0.8rem;">
+          <div class="card reveal reveal-delay-1" style="margin-bottom: 0.8rem;">
+            <h3><span class="emoji">🏢</span> Студенческие предприятия</h3>
+            <ul style="list-style:disc; padding-left:1.2rem; color:var(--text-muted); font-size:0.88rem; line-height:1.6;">
+              <li>Рекламное студенческое агентство «РеАстат»</li>
+              <li>Студенческий центр информационных технологий «Unicom»</li>
+              <li>Бюро переводов «WELCOME»</li>
+              <li>«Юридическая клиника»</li>
+            </ul>
+          </div>
+          <div class="card reveal reveal-delay-2" style="margin-bottom: 0.8rem;">
+            <h3><span class="emoji">♿</span> Инклюзивность</h3>
+            <p>В структуре ИГУ действует Центр по работе с инвалидами и лицами с ограниченными возможностями здоровья.</p>
+          </div>
+          <div class="card reveal reveal-delay-3" style="margin-bottom: 0.8rem;">
+            <h3><span class="emoji">🌱</span> Экологическое сообщество «ЭКОИГУ»</h3>
+            <p>Возможность позаботиться об окружающей среде вместе с единомышленниками.</p>
+          </div>
+          <div class="card reveal reveal-delay-1" style="margin-bottom: 0.8rem;">
+            <h3><span class="emoji">🧳</span> Студенческий и молодёжный туризм</h3>
+            <p>Твоя возможность путешествовать и познавать мир.</p>
+          </div>
+          <div class="card reveal reveal-delay-2">
+            <h3><span class="emoji">📢</span> Центр карьеры ИГУ</h3>
+            <p style="margin-bottom:0.5rem;">Помощь в трудоустройстве, стажировках и построении карьерной траектории. Участник федерального проекта «Образование для рынка труда» национального проекта «Кадры».</p>
+            <ul style="list-style:disc; padding-left:1.2rem; color:var(--text-muted); font-size:0.88rem; line-height:1.6;">
+              <li>Поиск вакансий и стажировок</li>
+              <li>Помощь в составлении резюме</li>
+              <li>Карьерные мероприятия и встречи с работодателями</li>
+              <li>Экскурсии на предприятия</li>
+              <li>Индивидуальный карьерный путь</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Логотипы партнёров (старый блок) -->
+    <div class="container">
+      <div class="logo-footer-block">
+        <div class="logo-scroll">
+          <div class="logo-item"><img src="https://i.ibb.co/Df71ynMN/image.png" alt="Логотип 1" /></div>
+          <div class="logo-item"><img src="https://i.ibb.co/M5P9Gr8p/image.png" alt="Логотип 2" /></div>
+          <div class="logo-item"><img src="https://i.ibb.co/WNT0kC6L/image.png" alt="Логотип 3" /></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Контакты и подвал -->
+  <footer id="contacts" class="contacts-footer">
+    <div class="container">
+      <h2 style="color:var(--text-main);">Контакты и адреса ИГУ</h2>
+      <div class="contacts-grid">
+        <div class="address-block reveal reveal-delay-1">
+          <span class="address-title">Главный корпус</span>
+          <p>г. Иркутск, ул. Карла Маркса, 1</p>
+        </div>
+        <div class="address-block reveal reveal-delay-2">
+          <span class="address-title">Канцелярия</span>
+          <p>Телефон: <a href="tel:+73952521931">+7 (3952) 521-931</a></p>
+          <p>Email: <a href="mailto:office@admin.isu.ru">office@admin.isu.ru</a></p>
+        </div>
+        <div class="address-block reveal reveal-delay-3">
+          <span class="address-title">Центральная приёмная комиссия</span>
+          <p>г. Иркутск, ул. Карла Маркса, 1, каб. 207</p>
+          <p>Телефон: <a href="tel:+73952521555">+7 (3952) 521-555</a>, <a href="tel:+73952521777">521-777</a></p>
+          <p>Email: <a href="mailto:priem@isu.ru">priem@isu.ru</a></p>
+        </div>
+        <div class="address-block reveal reveal-delay-1">
+          <span class="address-title">Пресс-служба</span>
+          <p>Телефон: <a href="tel:+73952521971">+7 (3952) 521-971</a></p>
+          <p>Email: <a href="mailto:isupress@isu.ru">isupress@isu.ru</a></p>
+        </div>
+        <div class="address-block reveal reveal-delay-2">
+          <span class="address-title">Приёмная ректора</span>
+          <p>Телефон: <a href="tel:+73952521900">+7 (3952) 521-900</a></p>
+          <p>Email: <a href="mailto:rector@isu.ru">rector@isu.ru</a></p>
+        </div>
+        <div class="address-block reveal reveal-delay-3">
+          <span class="address-title">Официальный сайт</span>
+          <p><a href="https://isu.ru" target="_blank">isu.ru</a></p>
+          <p style="margin-top:0.3rem; font-size:0.8rem; opacity:0.7;">ВКонтакте: <a href="https://vk.com/abiturient_isu" target="_blank">vk.com/abiturient_isu</a></p>
+          <p style="font-size:0.8rem; opacity:0.7;"><a href="https://isu.ru/phone" target="_blank">Телефонный справочник</a></p>
+        </div>
+      </div>
+      <p style="text-align:center; opacity:0.6; font-size:0.8rem; margin-top: 1.2rem;">Информация актуальна на 2026 год. Точные данные уточняйте на сайте ИГУ.</p>
+
+      <!-- Блок с информацией о разработчиках -->
+      <div class="footer-credits-wrapper" id="creditsWrapper">
+        <div class="footer-credits" id="creditsTrigger">
+          <span class="credits-text">Сайт сделан командой</span>
+          <span class="credits-brand">
+            <img src="https://i.ibb.co/tTDY02ZQ/image.png" alt="Логотип solITud" class="credits-logo" />
+            <span class="credits-name">sol<span class="credits-highlight">IT</span>ud</span>
+          </span>
+        </div>
+        <div class="credits-tooltip" id="creditsTooltip">Нажмите чтоб посмотреть</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Модальное окно с командой -->
+  <div class="team-modal" id="teamModal">
+    <h2>Наша команда</h2>
+    <ul class="team-list">
+      <li><span class="name">Третьяк Никита</span><span class="role">дизайнер/программист</span></li>
+      <li><span class="name">Косилов Денис</span><span class="role">дизайнер</span></li>
+      <li><span class="name">Шестак Полина</span><span class="role">программист</span></li>
+      <li><span class="name">Почтаренко Дмитрий</span><span class="role">дизайнер</span></li>
+    </ul>
+    <button class="close-btn" id="closeModalBtn">Закрыть</button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // === ПЛАВНОЕ ПОЯВЛЕНИЕ ФОНА ===
+      const bgImages = [
+        'https://i.ibb.co/Xx1b1cMy/image.png',
+        'https://i.ibb.co/Zp5Trdwv/image.png'
+      ];
+      const heroSection = document.getElementById('heroSection');
+      const vucSection = document.getElementById('vuc');
+      let loadedCount = 0;
+      const total = bgImages.length;
+      bgImages.forEach(url => {
+        const img = new Image();
+        img.onload = img.onerror = function() {
+          loadedCount++;
+          if (loadedCount === total) {
+            heroSection.classList.add('bg-loaded');
+            vucSection.classList.add('bg-loaded');
+          }
+        };
+        img.src = url;
+      });
+      setTimeout(() => {
+        if (!heroSection.classList.contains('bg-loaded')) heroSection.classList.add('bg-loaded');
+        if (!vucSection.classList.contains('bg-loaded')) vucSection.classList.add('bg-loaded');
+      }, 3000);
+
+      // === АНИМАЦИЯ ПАРТНЁРОВ ===
+      const scrollContainer = document.getElementById('partnersScroll');
+      const block = document.getElementById('partnersBlock');
+      
+      if (scrollContainer && block) {
+        let state = {
+          timeoutId: null,
+          animationId: null,
+          isRunning: false
+        };
+
+        function stopAnimation() {
+          if (state.timeoutId) {
+            clearTimeout(state.timeoutId);
+            state.timeoutId = null;
+          }
+          if (state.animationId) {
+            cancelAnimationFrame(state.animationId);
+            state.animationId = null;
+          }
+          state.isRunning = false;
+        }
+
+        function startAnimation() {
+          stopAnimation();
+
+          const containerWidth = block.offsetWidth;
+          const contentWidth = scrollContainer.scrollWidth;
+
+          if (contentWidth <= containerWidth) {
+            scrollContainer.style.transform = 'translateX(0)';
+            scrollContainer.style.justifyContent = 'center';
+            return;
+          }
+
+          const maxOffset = contentWidth - containerWidth + 20;
+          const duration = 10000;
+          const pause = 3000;
+
+          let startTime = null;
+          let direction = 1;
+          let currentOffset = 0;
+
+          function easeInOut(t) {
+            return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+          }
+
+          function animateStep(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = easeInOut(progress);
+
+            if (direction === 1) {
+              currentOffset = maxOffset * eased;
+            } else {
+              currentOffset = maxOffset - maxOffset * eased;
+            }
+
+            scrollContainer.style.transform = `translateX(-${currentOffset}px)`;
+
+            if (progress < 1) {
+              state.animationId = requestAnimationFrame(animateStep);
+            } else {
+              state.animationId = null;
+              state.timeoutId = setTimeout(() => {
+                direction *= -1;
+                startTime = null;
+                state.animationId = requestAnimationFrame(animateStep);
+              }, pause);
+            }
+          }
+
+          direction = 1;
+          startTime = null;
+          state.animationId = requestAnimationFrame(animateStep);
+          state.isRunning = true;
+        }
+
+        function initAnimation() {
+          const images = document.querySelectorAll('#partnersScroll img');
+          let imagesLoaded = 0;
+          const totalImages = images.length;
+
+          function checkAndStart() {
+            if (imagesLoaded === totalImages) {
+              setTimeout(startAnimation, 50);
+            }
+          }
+
+          if (totalImages === 0) {
+            setTimeout(startAnimation, 100);
+          } else {
+            images.forEach(img => {
+              if (img.complete) {
+                imagesLoaded++;
+              } else {
+                img.addEventListener('load', function() {
+                  imagesLoaded++;
+                  checkAndStart();
+                });
+                img.addEventListener('error', function() {
+                  imagesLoaded++;
+                  checkAndStart();
+                });
+              }
+            });
+            if (imagesLoaded === totalImages) {
+              setTimeout(startAnimation, 50);
+            } else {
+              setTimeout(() => {
+                if (imagesLoaded === totalImages) {
+                  startAnimation();
+                }
+              }, 2000);
+            }
+          }
+        }
+
+        initAnimation();
+
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            stopAnimation();
+            scrollContainer.style.transform = 'translateX(0)';
+            requestAnimationFrame(() => {
+              setTimeout(startAnimation, 100);
+            });
+          }, 300);
+        });
+      }
+
+      // === МОДАЛЬНОЕ ОКНО КОМАНДЫ ===
+      const wrapper = document.getElementById('creditsWrapper');
+      const modal = document.getElementById('teamModal');
+      const closeBtn = document.getElementById('closeModalBtn');
+      const tooltip = document.getElementById('creditsTooltip');
+
+      function positionModal() {
+        const rect = wrapper.getBoundingClientRect();
+        const modalWidth = modal.offsetWidth || 150;
+        const modalHeight = modal.offsetHeight || 120;
+
+        let top = rect.top - modalHeight - 10;
+        let left = rect.left + rect.width / 2 - modalWidth / 2;
+
+        if (top < 10) top = 10;
+        if (left < 10) left = 10;
+        if (left + modalWidth > window.innerWidth - 10) {
+          left = window.innerWidth - modalWidth - 10;
+        }
+
+        modal.style.top = top + 'px';
+        modal.style.left = left + 'px';
+      }
+
+      function openModal(e) {
+        e.preventDefault();
+        modal.style.display = 'block';
+        // Скрываем подсказку, пока окно открыто
+        if (tooltip) {
+          tooltip.style.opacity = '0';
+          tooltip.style.pointerEvents = 'none';
+        }
+        positionModal();
+      }
+
+      function closeModal() {
+        modal.style.display = 'none';
+        // Показываем подсказку обратно после закрытия окна
+        if (tooltip) {
+          tooltip.style.opacity = '';
+          tooltip.style.pointerEvents = '';
+        }
+      }
+
+      wrapper.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+          closeModal();
+        }
+      });
+
+      window.addEventListener('resize', function() {
+        if (modal.style.display === 'block') {
+          positionModal();
+        }
+      });
+
+      // === ОСТАЛЬНЫЕ СКРИПТЫ ===
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) target.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('reveal');
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.card, .benefit-item, .address-block, .vuc-highlight, .stat-item, .mission-card, .partner-country, .scholarship-item').forEach(el => {
+        observer.observe(el);
+      });
+
+      document.getElementById('backToMapBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        console.log('Вернуться к карте — функционал будет добавлен позже');
+      });
+    });
+  </script>
+</body>
+</html>
