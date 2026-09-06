@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Вузы Иркутска</title>
+    <link rel="icon" type="image/png" href="Img/Logo.png">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
@@ -2135,7 +2136,7 @@
                                     <span class="value"><span class="info-rating">${uni.rating}</span></span>
                                 </div>
                             </div>
-                            <button class="info-more-btn" onclick="alert('Функция «Подробнее» будет доступна позже.')">Подробнее...</button>
+                            <button class="info-more-btn" onclick="${uni.id === 'igu' ? "window.location.href='IGU.html'" : "alert('Функция «Подробнее» будет доступна позже.')"}">Подробнее...</button>
                         `;
 
                     requestAnimationFrame(() => {
